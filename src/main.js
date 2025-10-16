@@ -45,7 +45,7 @@ function setupMobileOptimizations() {
 const cameraPositions = {
   front: { pos: new THREE.Vector3(4, 1, 7), lookAt: new THREE.Vector3(-.3, 1, 0) },
   top: { pos: new THREE.Vector3(+0, 10, 0), lookAt: new THREE.Vector3(-.5, 0, 0) },
-  rear: { pos: new THREE.Vector3(5, 1, -6), lookAt: new THREE.Vector3(-.45,1, 0) }
+  rear: { pos: new THREE.Vector3(5, 1, -6), lookAt: new THREE.Vector3(-.45, 1, 0) }
 };
 
 function moveCamera(preset) {
@@ -65,20 +65,20 @@ function getCurrentCameraState() {
 
 
 function setCarButtonsEnabled(enabled) {
-    const btn911 = document.getElementById('btn_911Targa');
-    const btnMacan = document.getElementById('btn_Macan');
-    
-    if (btn911) btn911.disabled = !enabled;
-    if (btnMacan) btnMacan.disabled = !enabled;
-    
-    // Opcionalno: dodaj CSS klasu za vizualni feedback
-    if (enabled) {
-        btn911?.classList.remove('disabled');
-        btnMacan?.classList.remove('disabled');
-    } else {
-        btn911?.classList.add('disabled');
-        btnMacan?.classList.add('disabled');
-    }
+  const btn911 = document.getElementById('btn_911Targa');
+  const btnMacan = document.getElementById('btn_Macan');
+
+  if (btn911) btn911.disabled = !enabled;
+  if (btnMacan) btnMacan.disabled = !enabled;
+
+  // Opcionalno: dodaj CSS klasu za vizualni feedback
+  if (enabled) {
+    btn911?.classList.remove('disabled');
+    btnMacan?.classList.remove('disabled');
+  } else {
+    btn911?.classList.add('disabled');
+    btnMacan?.classList.add('disabled');
+  }
 }
 // ---- INITIALIZE UI ----
 function initializeUI() {
@@ -91,74 +91,74 @@ function initializeUI() {
     if (btnMacan) btnMacan.style.display = 'none';
 
 
-if (btn911) {
-    btn911.addEventListener('click', async () => {
+    if (btn911) {
+      btn911.addEventListener('click', async () => {
         if (isSwitchingCar || currentCar === '911') return;
         isSwitchingCar = true;
-        
+
         const previousState = getCurrentCameraState();
         const newCar = await carManager.switchToCar('911', camera, previousState);
         if (newCar) {
-            console.log('Prebačeno na model: 911');
-            currentCar = '911'; // AŽURIRAJ GLOBALNO STANJE
-            btn911.style.display = 'none';
-            if (btnMacan) btnMacan.style.display = 'block';
-            
-            if (labelSystem) {
-                labelSystem.setLabel('911', currentView, true);
-            }
-        }
-        
-        isSwitchingCar = false;
-    });
-}
+          console.log('Prebačeno na model: 911');
+          currentCar = '911'; // AŽURIRAJ GLOBALNO STANJE
+          btn911.style.display = 'none';
+          if (btnMacan) btnMacan.style.display = 'block';
 
-// Macan Button - switch to Macan
-if (btnMacan) {
-    btnMacan.addEventListener('click', async () => {
+          if (labelSystem) {
+            labelSystem.setLabel('911', currentView, true);
+          }
+        }
+
+        isSwitchingCar = false;
+      });
+    }
+
+    // Macan Button - switch to Macan
+    if (btnMacan) {
+      btnMacan.addEventListener('click', async () => {
         if (isSwitchingCar || currentCar === 'macan2017') return;
         isSwitchingCar = true;
-        
+
         const previousState = getCurrentCameraState();
         const newCar = await carManager.switchToCar('macan2017', camera, previousState);
         if (newCar) {
-            console.log('Prebačeno na model: Macan');
-            currentCar = 'macan2017'; // AŽURIRAJ GLOBALNO STANJE
-            if (btn911) btn911.style.display = 'block';
-            btnMacan.style.display = 'none';
-            
-            if (labelSystem) {
-                labelSystem.setLabel('macan', currentView, true);
-            }
+          console.log('Prebačeno na model: Macan');
+          currentCar = 'macan2017'; // AŽURIRAJ GLOBALNO STANJE
+          if (btn911) btn911.style.display = 'block';
+          btnMacan.style.display = 'none';
+
+          if (labelSystem) {
+            labelSystem.setLabel('macan', currentView, true);
+          }
         }
-        
+
         isSwitchingCar = false;
-    });
-}
-
-// Rain button - ISPRAVLJENO
-const btnRain = document.getElementById('btn-rain');
-if (btnRain) {
-  btnRain.addEventListener('click', () => {
-    if (rainEffect && environmentManager) {
-      const isRaining = rainEffect.toggleRain();
-      
-      // KORISTI environmentManager za promjenu environmenta
-      environmentManager.setRainMode(isRaining);
-      
-      btnRain.textContent = isRaining ? 'Stop Rain' : 'Rain';
-      btnRain.classList.toggle('active', isRaining);
-
-      // Ažuriraj temu UI-a
-      updateUITheme(isRaining);
-
-      // Promijeni boju labela ovisno o kiši
-      if (labelSystem) {
-        labelSystem.setRain(isRaining);
-      }
+      });
     }
-  });
-}
+
+    // Rain button - ISPRAVLJENO
+    const btnRain = document.getElementById('btn-rain');
+    if (btnRain) {
+      btnRain.addEventListener('click', () => {
+        if (rainEffect && environmentManager) {
+          const isRaining = rainEffect.toggleRain();
+
+          // KORISTI environmentManager za promjenu environmenta
+          environmentManager.setRainMode(isRaining);
+
+          btnRain.textContent = isRaining ? 'Stop Rain' : 'Rain';
+          btnRain.classList.toggle('active', isRaining);
+
+          // Ažuriraj temu UI-a
+          updateUITheme(isRaining);
+
+          // Promijeni boju labela ovisno o kiši
+          if (labelSystem) {
+            labelSystem.setRain(isRaining);
+          }
+        }
+      });
+    }
 
     // Color buttons
     const carColorBtn = document.getElementById('carColorBtn');
@@ -178,26 +178,26 @@ if (btnRain) {
     }
 
     // Camera preset buttons
-const btnFront = document.getElementById('btn-front');
-if (btnFront) btnFront.addEventListener('click', () => {
-    moveCamera('front');
-    currentView = 'front'; // AŽURIRAJ TRENUTNI PREGLED
-    if (labelSystem) labelSystem.setView('front', true);
-});
+    const btnFront = document.getElementById('btn-front');
+    if (btnFront) btnFront.addEventListener('click', () => {
+      moveCamera('front');
+      currentView = 'front'; // AŽURIRAJ TRENUTNI PREGLED
+      if (labelSystem) labelSystem.setView('front', true);
+    });
 
-const btnTop = document.getElementById('btn-side');
-if (btnTop) btnTop.addEventListener('click', () => {
-    moveCamera('top');
-    currentView = 'top'; // AŽURIRAJ TRENUTNI PREGLED
-    if (labelSystem) labelSystem.setView('top', true);
-});
+    const btnTop = document.getElementById('btn-side');
+    if (btnTop) btnTop.addEventListener('click', () => {
+      moveCamera('top');
+      currentView = 'top'; // AŽURIRAJ TRENUTNI PREGLED
+      if (labelSystem) labelSystem.setView('top', true);
+    });
 
-const btnRear = document.getElementById('btn-rear');
-if (btnRear) btnRear.addEventListener('click', () => {
-    moveCamera('rear');
-    currentView = 'rear'; // AŽURIRAJ TRENUTNI PREGLED
-    if (labelSystem) labelSystem.setView('rear', true);
-});
+    const btnRear = document.getElementById('btn-rear');
+    if (btnRear) btnRear.addEventListener('click', () => {
+      moveCamera('rear');
+      currentView = 'rear'; // AŽURIRAJ TRENUTNI PREGLED
+      if (labelSystem) labelSystem.setView('rear', true);
+    });
 
     console.log('UI initialized successfully');
   } catch (error) {
@@ -207,47 +207,52 @@ if (btnRear) btnRear.addEventListener('click', () => {
 
 // ---- INITIALIZATION ----
 async function initialize() {
-    console.log('Inicijaliziram aplikaciju...');
+  console.log('Inicijaliziram aplikaciju...');
 
-    // EKSPLICITNO POSTAVI POZADINU PRIJE BILO ČEGA
-    scene.background = new THREE.Color(0xf0f0f0);
-    console.log('Initial background set to:', scene.background);
+  // EKSPLICITNO POSTAVI POZADINU PRIJE BILO ČEGA
+  scene.background = new THREE.Color(0xf0f0f0);
+  console.log('Initial background set to:', scene.background);
 
-    environmentManager.setupLights();
-    await environmentManager.loadHDREnvironment('hdr/blocky_photo_studio_1k.hdr');
-    await environmentManager.loadFloor('SM_Floor.glb');
+  environmentManager.setupLights();
+  await environmentManager.loadHDREnvironment('hdr/german_town_street_1k.hdr');
+  await environmentManager.loadFloor('SM_Floor.glb');
 
-    carManager = new CarManager(scene, environmentManager);
-    await carManager.loadInitialCar();
+  // Postavi post-processing
+  environmentManager.setupPostProcessing();
 
-    rainEffect = new RainEffect(scene, environmentManager);
-    labelSystem = new LabelSystem(scene, carManager);
-    
-    if (labelSystem && labelSystem.setControls) {
-        labelSystem.setControls(controls);
-    }
+  carManager = new CarManager(scene, environmentManager);
+  await carManager.loadInitialCar();
 
-    moveCamera('front');
-    initializeUI();
+  rainEffect = new RainEffect(scene, environmentManager);
+  labelSystem = new LabelSystem(scene, carManager);
 
-    environmentManager.resetToSunnyDefaults();
+  if (labelSystem && labelSystem.setControls) {
+    labelSystem.setControls(controls);
+  }
 
-    console.log('Aplikacija inicijalizirana');
+  moveCamera('front');
+  initializeUI();
+
+  environmentManager.resetToSunnyDefaults();
+
+  console.log('Aplikacija inicijalizirana');
+
+
 }
 
 function updateUITheme(isRainyMode) {
-    const uiWrapperTop = document.getElementById('uiWrapperTop');
-    const h1 = uiWrapperTop.querySelector('h1');
+  const uiWrapperTop = document.getElementById('uiWrapperTop');
+  const h1 = uiWrapperTop.querySelector('h1');
 
-    if (isRainyMode) {
-        // Rainy mode - tamna pozadina
-        uiWrapperTop.classList.add('dark-theme');
-        if (h1) h1.style.color = 'white';
-    } else {
-        // Sunny mode - svijetla pozadina
-        uiWrapperTop.classList.remove('dark-theme');
-        if (h1) h1.style.color = 'black';
-    }
+  if (isRainyMode) {
+    // Rainy mode - tamna pozadina
+    uiWrapperTop.classList.add('dark-theme');
+    if (h1) h1.style.color = 'white';
+  } else {
+    // Sunny mode - svijetla pozadina
+    uiWrapperTop.classList.remove('dark-theme');
+    if (h1) h1.style.color = 'black';
+  }
 }
 
 // ---- ANIMATION LOOP ----
@@ -295,10 +300,11 @@ function animate(time) {
   if (labelSystem) {
     labelSystem.update(time);
   }
+  
   controls.update();
 
   if (needsRender) {
-    renderer.render(scene, camera);
+    environmentManager.render(); // ← SAMO JEDAN RENDER POZIV
     needsRender = false;
   }
 
@@ -312,6 +318,7 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
   needsRender = true;
+  environmentManager.onResize(window.innerWidth, window.innerHeight)
 });
 
 document.addEventListener('visibilitychange', () => {
@@ -362,7 +369,7 @@ window.addEventListener('load', () => {
   controls.addEventListener('start', () => {
     isUserInteracting = true;
 
-      if (labelSystem) labelSystem.onCameraStartMove();
+    if (labelSystem) labelSystem.onCameraStartMove();
     if (userInteractionTimeout) clearTimeout(userInteractionTimeout);
   });
 
@@ -370,7 +377,7 @@ window.addEventListener('load', () => {
     userInteractionTimeout = setTimeout(() => {
       isUserInteracting = false;
       isCameraMoving = true;
-       if (labelSystem) labelSystem.onCameraStopMove();
+      if (labelSystem) labelSystem.onCameraStopMove();
     }, 1000);
   });
 
@@ -379,7 +386,7 @@ window.addEventListener('load', () => {
   });
 
   // Inicijaliziraj managere
-  environmentManager = new EnvironmentManager(scene, renderer);
+  environmentManager = new EnvironmentManager(scene, renderer, camera);
   carManager = new CarManager(scene, environmentManager);
 
   // Postavi render callback

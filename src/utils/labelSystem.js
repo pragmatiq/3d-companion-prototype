@@ -77,6 +77,7 @@ export class LabelSystem {
             this.currentLabel.rotation.set(0, lp.rotY, 0);
         }
 
+        // ORIGINALNI MATERIJALI - REAGIRAJU NA SVJETLA
         const color = this.isRaining ? 0xffffff : 0x000000;
         this.currentLabel.traverse(child => {
             if (child.isMesh && child.material) {

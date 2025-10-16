@@ -40,7 +40,7 @@ export class RainEffect {
     const material = new THREE.LineBasicMaterial({
         color: 0x8888ff,
         transparent: true,
-        opacity: 0.15,  // ORIGINAL: 0.15 (ne 0.7)
+        opacity: 0.25,  // ORIGINAL: 0.15 (ne 0.7)
         linewidth: 1
     });
 
