@@ -15,16 +15,16 @@ export class CarManager {
     carModel.traverse((child) => {
         if (child.isMesh && child.material && child.material.name === 'carpaint') {
             
-            // SAMO POBOLJŠAJ POSTOJEĆI MATERIJAL - NE STVARAJ NOVI
-            child.material.metalness = .5;        // POVEĆAJ metalness
+            //Car paint material improvements
+            child.material.metalness = .8;        // POVEĆAJ metalness
             child.material.roughness = 0.5;         // SMANJI roughness (više sjaja)
             child.material.clearcoat = 1.0;         // DODAJ clearcoat
-            child.material.clearcoatRoughness = 0.05; // Vrlo glatak clearcoat
+            child.material.clearcoatRoughness = 0.015; // Vrlo glatak clearcoat
             child.material.envMapIntensity = 1;   // POVEĆAJ refleksije
             
             // Ako je MeshPhysicalMaterial, dodaj dodatne efekte
             if (child.material.isMeshPhysicalMaterial) {
-                child.material.sheen = 0.3;           // Svilenkasti sjaj
+                child.material.sheen = 1;           // Svilenkasti sjaj
                 child.material.sheenRoughness = 0.3;
                 child.material.specularIntensity = 0.8;
             }
