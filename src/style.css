@@ -1,0 +1,194 @@
+/* Reset i osnovni stilovi */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    background-color: #f0f0f0;
+}
+
+/* Canvas */
+#canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* UI Wrapper - Bottom */
+#uiWrapper {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+/* UI Wrapper - Top */
+#uiWrapperTop {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 10;
+}
+
+/* H1 - naslov demo-a */
+#uiWrapperTop h1 {
+    font-size: 24px;
+    color: #333;
+    margin: 0;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Klasa za tamnu temu */
+.dark-theme #uiWrapperTop h1 {
+    color: #ffffff;
+}
+
+/* P - diskretni credit */
+#uiWrapperTop p {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+/* Link unutar P tag-a */
+#uiWrapperTop p a {
+    color: #cd0606; /* Crvena boja umjesto plave */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+#uiWrapperTop p a:hover {
+    color: #a00505; /* Tamnija crvena na hover */
+    text-decoration: underline;
+}
+
+#uiWrapperTop p a:visited {
+    color: #cd0606; /* Ista boja i za posjećene linkove */
+}
+
+/* Kada body učita, dodaj klasu da se pojavi */
+body.loaded #uiWrapperTop p {
+    opacity: 1;
+}
+
+/* Opći button stilovi */
+button {
+    padding: 10px 20px;
+    border: 2px solid #333;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+button:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Posebni stilovi za car toggle buttone */
+#btn_911Targa, #btn_Macan {
+    border: none;
+    background-size: contain;
+    width: 220px;
+    height: 64px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: none;
+}
+
+#btn_911Targa:hover, #btn_Macan:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* LOGO button */
+#LOGO {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: 2px solid white;
+    padding: 15px 30px;
+    font-size: 16px;
+}
+
+#LOGO:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Porsche button active state */
+.porsche-btn.active {
+    background-color: #d5001c;
+    color: #fff;
+    border-color: #d5001c;
+}
+
+.porsche-btn.active:hover {
+    background-color: #b30018;
+    border-color: #b30018;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #uiWrapper, #uiWrapperTop {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    button {
+        padding: 8px 16px;
+        font-size: 12px;
+        min-width: 60px;
+    }
+    
+    #btn_911Targa, #btn_Macan {
+        width: 180px;
+        height: 52px;
+    }
+}
+
+@media (max-width: 480px) {
+    #uiWrapper {
+        bottom: 10px;
+    }
+    
+    #uiWrapperTop {
+        top: 10px;
+    }
+    
+    button {
+        padding: 6px 12px;
+        font-size: 11px;
+        min-width: 50px;
+    }
+    
+    #btn_911Targa, #btn_Macan {
+        width: 150px;
+        height: 44px;
+    }
+}
