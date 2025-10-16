@@ -304,7 +304,7 @@ export class EnvironmentManager {
                 envMapIntensity: 0.3,
                 background: new THREE.Color(0x333344),
                 floorColor: new THREE.Color(0x333344),
-                shadowIntensity: 1.0 // SLABIJE SJENE ZA KIŠU
+                shadowIntensity: 5.0 // SLABIJE SJENE ZA KIŠU
             };
 
             this.scene.fog = new THREE.FogExp2(0x333344, 0.015);
@@ -356,8 +356,8 @@ export class EnvironmentManager {
                             child.material.envMapIntensity = .8;
 
                             if (child.material.isMeshStandardMaterial) {
-                                child.material.roughness = 0.8;
-                                child.material.metalness = 0.0;
+                                child.material.roughness = 0.95;
+                                child.material.metalness = 0.1;
                             }
 
                             child.material.needsUpdate = true;
@@ -377,15 +377,10 @@ export class EnvironmentManager {
             if (child.isMesh && child.material && child.material.name === 'M_Floor') {
                 if (child.material.isMeshStandardMaterial || child.material.isMeshPhysicalMaterial) {
                     // KIŠNI MOD - mokri asfalt izgled
-                    child.material.roughness = 0.15;      // Manje roughness = glatkije (mokro)
-                    child.material.metalness = .5;      // Više metalness = više refleksije
+                    child.material.roughness = 0.25;      // Manje roughness = glatkije (mokro)
+                    child.material.metalness = .0;      // Više metalness = više refleksije
 
-                    // Ako je PhysicalMaterial, možeš kontrolirati i specular
-                    if (child.material.isMeshPhysicalMaterial) {
-                        child.material.specularIntensity = 0.8;    // Jači specular highlights
-                        child.material.clearcoat = 0.5;           // Lakirani izgled
-                        child.material.clearcoatRoughness = 0.1;
-                    }
+                  
 
                     child.material.needsUpdate = true;
                 }
@@ -400,14 +395,11 @@ export class EnvironmentManager {
             if (child.isMesh && child.material && child.material.name === 'M_Floor') {
                 if (child.material.isMeshStandardMaterial || child.material.isMeshPhysicalMaterial) {
                     // SUNNY MOD - suhi asfalt izgled
-                    child.material.roughness = 0.8;      // Više roughness = hrapavije (suho)
-                    child.material.metalness = 0.1;      // Manje metalness = manje refleksije
+                    child.material.roughness = 0.95;
+                    child.material.metalness = 0.1;
+                    child.material.envMapIntensity = .8;
 
-                    if (child.material.isMeshPhysicalMaterial) {
-                        child.material.specularIntensity = 0.3;    // Slabiji specular
-                        child.material.clearcoat = 0.0;           // Bez lakiranog izgleda
-                    }
-
+            
                     child.material.needsUpdate = true;
                 }
             }
