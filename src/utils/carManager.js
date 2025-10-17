@@ -20,7 +20,7 @@ export class CarManager {
             child.material.roughness = 0.5;         // SMANJI roughness (više sjaja)
             child.material.clearcoat = 1.0;         // DODAJ clearcoat
             child.material.clearcoatRoughness = 0.015; // Vrlo glatak clearcoat
-            child.material.envMapIntensity = 1;   // POVEĆAJ refleksije
+            child.material.envMapIntensity = 2;   // POVEĆAJ refleksije
             
             // Ako je MeshPhysicalMaterial, dodaj dodatne efekte
             if (child.material.isMeshPhysicalMaterial) {
@@ -33,6 +33,10 @@ export class CarManager {
             child.material.needsUpdate = true;
         }
     });
+}
+
+    setModelLoadedCallback(callback) {
+    this.modelLoadedCallback = callback;
 }
 
 
@@ -76,6 +80,11 @@ export class CarManager {
 
                 this.models[name] = car;
                 console.log('Model uspješno učitan:', name);
+
+                if (this.modelLoadedCallback) {
+        this.modelLoadedCallback();
+    }
+
                 resolve(car);
             }, 
             (progress) => {

@@ -18,9 +18,48 @@ let camTargetLookAt = new THREE.Vector3();
 let rainEffect = null;
 let environmentManager, carManager, labelSystem, scene, camera, renderer, controls, stats;
 let lastTime = 0;
-let currentView = 'front';
 let isSwitchingCar = false;
+let currentView = 'front';
 let currentCar = 'macan2017';
+
+// ---- SIMPLE PRELOADER ----
+let modelsToLoad = 2;
+let modelsLoaded = 0;
+let minimumLoadTime = 3000; // 3 sekunde minimum
+let appStartTime = Date.now();
+
+function modelLoaded() {
+    modelsLoaded++;
+    console.log(`Model loaded: ${modelsLoaded}/${modelsToLoad}`);
+    
+    if (modelsLoaded >= modelsToLoad) {
+        // Sakrij preloader nakon minimum 3 sekunde
+        const loadTime = Date.now() - appStartTime;
+        const timeRemaining = Math.max(0, minimumLoadTime - loadTime);
+        
+        console.log(`Models loaded in ${loadTime}ms, waiting ${timeRemaining}ms more`);
+        
+        setTimeout(hidePreloader, timeRemaining);
+    }
+}
+
+function hidePreloader() {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        // Sakrij preloader
+        preloader.classList.add('hidden');
+        
+        // Prikaži UI nakon 0.5s delay
+        setTimeout(() => {
+            document.getElementById('uiWrapperTop').classList.add('ui-visible');
+            document.getElementById('uiWrapper').classList.add('ui-visible');
+            document.body.classList.add('loaded');
+        }, 500); // 500ms = 0.5s
+    }
+}
+
+// Fallback - sakrij preloader nakon max 8 sekundi
+setTimeout(hidePreloader, 8000);
 
 // ---- MOBILE OPTIMIZATIONS ----
 function setupMobileOptimizations() {
@@ -220,8 +259,13 @@ async function initialize() {
   // Postavi post-processing
   environmentManager.setupPostProcessing();
 
+
+
   carManager = new CarManager(scene, environmentManager);
-  await carManager.loadInitialCar();
+    
+    // Postavi callback za preloader
+    carManager.setModelLoadedCallback(modelLoaded);
+    await carManager.loadInitialCar();
 
   rainEffect = new RainEffect(scene, environmentManager);
   labelSystem = new LabelSystem(scene, carManager);
@@ -336,68 +380,62 @@ window.addEventListener('load', () => {
 
 // ---- START APLIKACIJE ----
 window.addEventListener('load', () => {
-  // Inicijaliziraj Three.js komponente
-  stats = Stats();
-  stats.showPanel(0);
-  document.body.appendChild(stats.dom);
+    // Inicijaliziraj Three.js komponente
+    stats = Stats();
+    stats.showPanel(0);
+    document.body.appendChild(stats.dom);
 
-  // Scene + Renderer
-  const canvas = document.getElementById('canvas');
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xf0f0f0);
+    const canvas = document.getElementById('canvas');
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf0f0f0);
 
-  camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.01, 2000);
-  camera.position.set(4, 0, 7);
+    camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.01, 2000);
+    camera.position.set(4, 0, 7);
 
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.physicallyCorrectLights = true;
-  renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.shadowMap.autoUpdate = true;
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.physicallyCorrectLights = true;
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.shadowMap.autoUpdate = true;
 
-  // Controls
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.minDistance = 1.0;
-  controls.maxDistance = 20.0;
-  controls.enableDamping = true;
-  controls.minPolarAngle = 0;
-  controls.maxPolarAngle = 1.4835;
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.minDistance = 1.0;
+    controls.maxDistance = 20.0;
+    controls.enableDamping = true;
+    controls.minPolarAngle = 0;
+    controls.maxPolarAngle = 1.4835;
 
-  controls.addEventListener('start', () => {
-    isUserInteracting = true;
+    controls.addEventListener('start', () => {
+        isUserInteracting = true;
+        if (labelSystem) labelSystem.onCameraStartMove();
+        if (userInteractionTimeout) clearTimeout(userInteractionTimeout);
+    });
 
-    if (labelSystem) labelSystem.onCameraStartMove();
-    if (userInteractionTimeout) clearTimeout(userInteractionTimeout);
-  });
+    controls.addEventListener('end', () => {
+        userInteractionTimeout = setTimeout(() => {
+            isUserInteracting = false;
+            isCameraMoving = true;
+            if (labelSystem) labelSystem.onCameraStopMove();
+        }, 1000);
+    });
 
-  controls.addEventListener('end', () => {
-    userInteractionTimeout = setTimeout(() => {
-      isUserInteracting = false;
-      isCameraMoving = true;
-      if (labelSystem) labelSystem.onCameraStopMove();
-    }, 1000);
-  });
+    controls.addEventListener('change', () => {
+        needsRender = true;
+    });
 
-  controls.addEventListener('change', () => {
-    needsRender = true;
-  });
+    environmentManager = new EnvironmentManager(scene, renderer, camera);
+    carManager = new CarManager(scene, environmentManager);
 
-  // Inicijaliziraj managere
-  environmentManager = new EnvironmentManager(scene, renderer, camera);
-  carManager = new CarManager(scene, environmentManager);
+    environmentManager.setRenderCallback(() => {
+        needsRender = true;
+    });
 
-  // Postavi render callback
-  environmentManager.setRenderCallback(() => {
-    needsRender = true;
-  });
+    setupMobileOptimizations();
 
-  // Mobile optimizations
-  setupMobileOptimizations();
-
-  // Pokreni aplikaciju
-  initialize();
-  animate(0); // Počni s time = 0
+    // Pokreni aplikaciju
+    initialize();
+    animate(0);
 });
