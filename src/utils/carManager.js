@@ -45,7 +45,7 @@ export class CarManager {
         await this.loadCar('macan2017', 'macan2017.glb');
         this.switchCar('macan2017');
         
-        this.loadCar('911', 'SM_911Targa.glb').then(() => {
+        this.loadCar('911', 'modularCar/SM_911_Targa_A.glb').then(() => {
             console.log('Drugi auto učitan');
         });
     }
